@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyCNBlog.Core\MyCNBlog.Core.csproj" />
+    <ProjectReference Include="..\MyCNBlog.Database\MyCNBlog.Database.csproj" />
+  </ItemGroup>
+
+</Project>

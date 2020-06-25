@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCNBlog.Api", "MyCNBlog.Api\MyCNBlog.Api.csproj", "{2EDB1D2D-603B-49EA-A4A3-25B5427EBE27}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC} = {6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}
+		{F872FE98-7805-4A26-A9ED-C226211BC2A2} = {F872FE98-7805-4A26-A9ED-C226211BC2A2}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCNBlog.Core", "MyCNBlog.Core\MyCNBlog.Core.csproj", "{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCNBlog.Database", "MyCNBlog.Database\MyCNBlog.Database.csproj", "{F872FE98-7805-4A26-A9ED-C226211BC2A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC} = {6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCNBlog.Services", "MyCNBlog.Services\MyCNBlog.Services.csproj", "{9969028B-8550-4F9D-ABF9-8DD46CFC014B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyCNBlog.Services.Tests", "MyCNBlog.Services.Tests\MyCNBlog.Services.Tests.csproj", "{69D15645-C521-40FD-9A34-01BDDE987A80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCNBlog.Repositories", "MyCNBlog.Repositories\MyCNBlog.Repositories.csproj", "{43883D11-8D3F-4E9D-B592-BDF7763D4F3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EDB1D2D-603B-49EA-A4A3-25B5427EBE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EDB1D2D-603B-49EA-A4A3-25B5427EBE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EDB1D2D-603B-49EA-A4A3-25B5427EBE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EDB1D2D-603B-49EA-A4A3-25B5427EBE27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F076597-ADB1-4935-BC70-1EFCB2CB3FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F872FE98-7805-4A26-A9ED-C226211BC2A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F872FE98-7805-4A26-A9ED-C226211BC2A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F872FE98-7805-4A26-A9ED-C226211BC2A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F872FE98-7805-4A26-A9ED-C226211BC2A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9969028B-8550-4F9D-ABF9-8DD46CFC014B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9969028B-8550-4F9D-ABF9-8DD46CFC014B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9969028B-8550-4F9D-ABF9-8DD46CFC014B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9969028B-8550-4F9D-ABF9-8DD46CFC014B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69D15645-C521-40FD-9A34-01BDDE987A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69D15645-C521-40FD-9A34-01BDDE987A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69D15645-C521-40FD-9A34-01BDDE987A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69D15645-C521-40FD-9A34-01BDDE987A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43883D11-8D3F-4E9D-B592-BDF7763D4F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43883D11-8D3F-4E9D-B592-BDF7763D4F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43883D11-8D3F-4E9D-B592-BDF7763D4F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43883D11-8D3F-4E9D-B592-BDF7763D4F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB31F6D4-B405-438E-94B8-C63E562F7495}
+	EndGlobalSection
+EndGlobal
