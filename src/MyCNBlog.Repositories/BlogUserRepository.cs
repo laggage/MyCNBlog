@@ -28,11 +28,11 @@ namespace MyCNBlog.Repositories
             return Task.Run(() => Query(parameters));
         }
 
-        public override Task<BlogUser> QueryByIdAsync(int id, string fields = null)
+        public override BlogUser QueryById(int id)
         {
             return _context.Set<BlogUser>()
                 .Include(x => x.Blog)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == id);
         }
 
         /// <summary>

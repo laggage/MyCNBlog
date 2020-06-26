@@ -1,4 +1,5 @@
-﻿using MyCNBlog.Core.Abstractions;
+﻿using System;
+using MyCNBlog.Core.Abstractions;
 
 namespace MyCNBlog.Core.Models
 {
@@ -12,16 +13,17 @@ namespace MyCNBlog.Core.Models
         public string Comment { get; set; }
 
         
-        public int ReplayedPostId { get; set; }
+        public int RepliedPostId { get; set; }
         
-        public int ReplayedUserId { get; set; }
-        
+        public int RepliedUserId { get; set; }
+
+        public DateTime PostedTime { get; set; }
         
         /// <summary>
         /// Navigation Property to Post
         /// A comment belog to a Post whick was replayed
         /// </summary>
-        public virtual Post ReplayedPost { get; set; }
+        public virtual Post RepliedPost { get; set; }
 
         /// <summary>
         /// Navigation Property to User
