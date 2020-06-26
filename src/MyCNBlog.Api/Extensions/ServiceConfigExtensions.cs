@@ -1,6 +1,7 @@
 ﻿using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -111,6 +112,9 @@ namespace MyCNBlog.Api.Extensions
                 c.AddPolicy(
                     AuthorizationPolicies.PostsQueryPolicy,
                     c => c.Requirements.Add(new PostsQueryAuthorizationRequirment()));
+                c.AddPolicy(
+                    AuthorizationPolicies.OpenBlogPolicy,
+                    c => c.RequireRole(RoleConstants.SuperAdmin));
             });
             services.AddSingleton<IAuthorizationHandler, PostAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PostsQueryAuthorizationHandler>();

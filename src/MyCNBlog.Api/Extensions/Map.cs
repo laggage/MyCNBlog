@@ -23,6 +23,8 @@ namespace MyCNBlog.Api.Extensions
                     m => m.Bloger,
                     x => x.MapFrom(p => p.User))
                 .ReverseMap();
+            CreateMap<Blog, BlogAddDto>()
+                .ReverseMap();
 
             CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<PostAddDto, Post>().ReverseMap();

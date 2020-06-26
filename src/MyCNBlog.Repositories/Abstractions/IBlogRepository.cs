@@ -3,7 +3,7 @@ using MyCNBlog.Repositories.Abstraction;
 
 namespace MyCNBlog.Repositories.Abstractions
 {
-    public interface IBlogRepository:IRepository<Blog>
+    public interface IBlogRepository : IRepository<Blog>
     {
     }
 }

@@ -89,7 +89,7 @@ namespace MyCNBlog.Api
 
         private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
         {
-            var builder = new ServiceCollection()
+            ServiceProvider builder = new ServiceCollection()
                 .AddLogging()
                 .AddMvc()
                 .AddNewtonsoftJson()
