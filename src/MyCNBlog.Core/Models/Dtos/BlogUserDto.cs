@@ -21,14 +21,16 @@ namespace MyCNBlog.Core.Models.Dtos
         /// </summary>
         public Sex Sex { get; set; }
 
-        public DateTime Birth { get; set; }
+        public DateTime? Birth { get; set; }
 
-        public DateTime RegiserDate { get; set; }
+        public DateTime? RegiserDate { get; set; }
 
         /// <summary>
         /// Physcial path of avatar
         /// </summary>
         public string AvatarUrl { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         public BlogDto Blog { get; set; }
     }

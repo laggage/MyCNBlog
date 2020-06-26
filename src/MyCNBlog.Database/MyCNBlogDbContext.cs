@@ -68,8 +68,8 @@ namespace MyCNBlog.Database
                 b.Ignore(x => x.Tags);
                 // Post - Comments
                 b.HasMany(x => x.Comments)
-                .WithOne(x => x.ReplayedPost)
-                .HasForeignKey(x => x.ReplayedPostId);
+                .WithOne(x => x.RepliedPost)
+                .HasForeignKey(x => x.RepliedPostId);
                 // Post - BlogUser
                 b.HasOne(x => x.Author).WithMany().HasForeignKey(x => x.AuthorId);
             });
@@ -81,7 +81,7 @@ namespace MyCNBlog.Database
                 // Comment - BlogUser
                 b.HasOne(x => x.User)
                 .WithMany()
-                .HasForeignKey(x => x.ReplayedUserId);
+                .HasForeignKey(x => x.RepliedUserId);
             });
 
             builder.Entity<PostTag>(b =>

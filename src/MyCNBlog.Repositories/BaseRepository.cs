@@ -54,25 +54,55 @@ namespace MyCNBlog.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public PaginationList<TEntity> Query(QueryParameters parameters)
+        #region Query
+
+        public Task<IQueryable<TEntity>> QueryAsync(
+            Expression<Func<TEntity, bool>> predict)
         {
-            return _context.Set<TEntity>().AsQueryable().Paging(parameters);
+            return Task.Run(() => Query(predict));
         }
 
-        public virtual TEntity QueryById(int id, string fields = null)
+        public IQueryable<TEntity> Query(
+          Expression<Func<TEntity, bool>> predict)
+        {
+            return Query().Where(predict);
+        }
+
+        /// <summary>
+        /// 基本的查询
+        /// </summary>
+        /// <returns></returns>
+        public virtual IQueryable<TEntity> Query()
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
+
+        public PaginationList<TEntity> Query(QueryParameters parameters)
+        {
+            return Query().Paging(parameters);
+        }
+
+        /// <summary>
+        /// 基本查询
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual TEntity QueryById(int id)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public virtual Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters)
+        public Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters)
         {
             return Task.Run(() => Query(parameters));
         }
 
-        public virtual Task<TEntity> QueryByIdAsync(int id, string fields = null)
+        public Task<TEntity> QueryByIdAsync(int id)
         {
-            return Task.Run(() => QueryById(id, fields));
+            return Task.Run(() => QueryById(id));
         }
+
+        #endregion
 
 
         #region Delete
@@ -135,7 +165,15 @@ namespace MyCNBlog.Repositories
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="softDelete"></param>
-        public abstract void Delete(TEntity entity, bool softDelete);
+        public virtual void Delete(TEntity entity, bool softDelete)
+        {
+            if(!(entity is Entity softEntity))
+                throw new NotSupportedException("Please override the method to implement soft delete");
+            else if(softEntity != null && softDelete)
+                SoftDelete(softEntity);
+            else
+                Delete(entity);
+        }
 
         public void DeleteById(int id, bool softDelete)
         {
@@ -179,15 +217,5 @@ namespace MyCNBlog.Repositories
             foreach(TEntity entity in entities)
                 Update(entity);
         }
-
-        public async Task<IEnumerable<TEntity>> QueryAsync(
-           Expression<Func<TEntity, bool>> predict)
-        {
-            // TODO: 这里必须加await, 涉及到协变和逆变
-            return await _context.Set<TEntity>()
-                .Where(predict)
-                .ToListAsync();
-        }
-
     }
 }

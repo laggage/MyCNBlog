@@ -19,12 +19,16 @@ namespace MyCNBlog.Repositories
             HardOrSoftDelete(entity, softDelete);
         }
 
-        public override Post QueryById(int id, string fields = null)
+        public override IQueryable<Post> Query()
         {
-            return _context.Set<Post>()
-                .AsQueryable()
+            return base.Query().AsQueryable()
                 .Include(x => x.PostTags)
-                .ThenInclude(x => x.Tag)
+                .ThenInclude(x => x.Tag);
+        }
+
+        public override Post QueryById(int id)
+        {
+            return Query()
                 .FirstOrDefault(x => x.Id == id);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MyCNBlog.Core.Abstractions;
@@ -13,11 +14,13 @@ namespace MyCNBlog.Repositories.Abstraction
     /// <typeparam name="TKey">实体主键类型</typeparam>
     public interface IRepository<TEntity, TKey>
     {
+        IQueryable<TEntity> Query();
         PaginationList<TEntity> Query(QueryParameters parameters);
-        Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> predict);
-        TEntity QueryById(TKey id, string fields = null);
+        IQueryable<TEntity> Query(Expression<Func<TEntity, bool>> predict);
+        TEntity QueryById(TKey id);
         Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters);
-        Task<TEntity> QueryByIdAsync(TKey id, string fields = null);
+        Task<IQueryable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> predict);
+        Task<TEntity> QueryByIdAsync(TKey id);
 
 
         void Delete(TEntity entity);

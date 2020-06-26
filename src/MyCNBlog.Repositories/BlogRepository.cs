@@ -8,10 +8,5 @@ namespace MyCNBlog.Repositories.Abstractions
         public BlogRepository(MyCNBlogDbContext context) : base(context)
         {
         }
-
-        public override void Delete(Blog entity, bool softDelete)
-        {
-            HardOrSoftDelete(entity, softDelete);
-        }
     }
 }

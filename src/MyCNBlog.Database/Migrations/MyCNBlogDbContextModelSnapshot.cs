@@ -318,10 +318,13 @@ namespace MyCNBlog.Database.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("ReplayedPostId")
+                    b.Property<DateTime>("PostedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("RepliedPostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReplayedUserId")
+                    b.Property<int>("RepliedUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -329,9 +332,9 @@ namespace MyCNBlog.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReplayedPostId");
+                    b.HasIndex("RepliedPostId");
 
-                    b.HasIndex("ReplayedUserId");
+                    b.HasIndex("RepliedUserId");
 
                     b.ToTable("PostComment");
                 });
@@ -458,15 +461,15 @@ namespace MyCNBlog.Database.Migrations
 
             modelBuilder.Entity("MyCNBlog.Core.Models.PostComment", b =>
                 {
-                    b.HasOne("MyCNBlog.Core.Models.Post", "ReplayedPost")
+                    b.HasOne("MyCNBlog.Core.Models.Post", "RepliedPost")
                         .WithMany("Comments")
-                        .HasForeignKey("ReplayedPostId")
+                        .HasForeignKey("RepliedPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MyCNBlog.Core.Models.BlogUser", "User")
                         .WithMany()
-                        .HasForeignKey("ReplayedUserId")
+                        .HasForeignKey("RepliedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
