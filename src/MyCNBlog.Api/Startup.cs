@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +16,6 @@ using MyCNBlog.Database;
 using MyCNBlog.Repositories;
 using MyCNBlog.Services.Extensions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace MyCNBlog.Api
 {

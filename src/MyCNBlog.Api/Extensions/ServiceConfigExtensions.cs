@@ -118,6 +118,7 @@ namespace MyCNBlog.Api.Extensions
             });
             services.AddSingleton<IAuthorizationHandler, PostAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PostsQueryAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, BlogPartiallyUpdateAuthorizationHandler>();
         }
 
         public static string GetConnectionString(string database, IConfiguration configuration)

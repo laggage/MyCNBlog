@@ -1,16 +1,17 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MyCNBlog.Api.Extensions;
 using MyCNBlog.Core;
 using MyCNBlog.Core.Models;
 using MyCNBlog.Core.Models.Dtos;
 using MyCNBlog.Repositories.Abstraction;
 using MyCNBlog.Repositories.Abstractions;
-using MyCNBlog.Services;
 using MyCNBlog.Services.ResourceShaping;
 
 namespace MyCNBlog.Api.Controllers
@@ -22,6 +23,7 @@ namespace MyCNBlog.Api.Controllers
         protected IBlogRepository BlogRepo { get; }
         protected IAuthorizationService AuthServ { get; }
         protected IBlogUserRepository UserRepo { get; }
+        protected IValidator<BlogAddDto> Validator { get; }
 
         public BlogController(IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -30,12 +32,14 @@ namespace MyCNBlog.Api.Controllers
             ITypeService typeService,
             IBlogRepository blogRepo,
             IAuthorizationService authServ,
-            IBlogUserRepository userRepo)
+            IBlogUserRepository userRepo,
+            IValidator<BlogAddDto> validator)
             : base(unitOfWork, mapper, userManager, identityOptions, typeService)
         {
             BlogRepo = blogRepo;
             AuthServ = authServ;
             UserRepo = userRepo;
+            Validator = validator;
         }
 
         /// <summary>
@@ -47,10 +51,10 @@ namespace MyCNBlog.Api.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPatch("{blogId}")]
-        [Authorize(Policy = AuthorizationPolicies.AdminOnlyPolicy)]
         [Consumes(ContentTypes.JsonContentType)]
+        [Authorize]
         public async Task<IActionResult> PartiallyUpdate(
-            [FromRoute] int blogId,
+             [FromRoute] int blogId,
              [FromBody] JsonPatchDocument<BlogAddDto> patchDoc)
         {
             Blog blog = await BlogRepo.QueryByIdAsync(blogId);
@@ -59,34 +63,21 @@ namespace MyCNBlog.Api.Controllers
 
             BlogAddDto blogDto = Mapper.Map<BlogAddDto>(blog);
             patchDoc.ApplyTo(blogDto);
-            // 为下面一个重载服务的鉴权
-            if(!User.IsInRole(RoleConstants.SuperAdmin))
-            {   // 只允许管理员设置 IsOpened属性
-                if(!(await AuthServ.AuthorizeAsync(
+
+            await this.ValidateModelAsync(Validator, blogDto);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if(!(await AuthServ.AuthorizeAsync(
                     User, blogDto, AuthorizationPolicies.OpenBlogPolicy))
                     .Succeeded)
-                    return Forbid();
-            }
+                return Forbid();
 
             Mapper.Map(blogDto, blog);
 
             BlogRepo.Update(blog);
 
             return await SaveChangesAndThrowIfFailed();
-        }
-
-        [HttpPatch]
-        [Authorize]
-        public async Task<IActionResult> PartiallyUpdate(
-            JsonPatchDocument<BlogAddDto> patchDoc)
-        {
-            BlogUser user = await UserRepo.QueryByIdAsync(
-                AuthHelpers.GetUserId(
-                    User, IdentityOptions.ClaimsIdentity.UserIdClaimType).Value);
-
-            int blogId = user.Blog.Id;
-
-            return await PartiallyUpdate(blogId, patchDoc);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace MyCNBlog.Api.Extensions
                     x => x.MapFrom(p => p.User))
                 .ReverseMap();
             CreateMap<Blog, BlogAddDto>()
+                .ForMember(x => x.IsOpened, m => m.Ignore())
                 .ReverseMap();
 
             CreateMap<Post, PostDto>().ReverseMap();
