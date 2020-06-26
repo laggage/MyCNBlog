@@ -6,7 +6,7 @@ namespace MyCNBlog.Core.Models
     /// <summary>
     /// A Tag can belong to many posts, a post can have many tags
     /// </summary>
-    public class Tag : Model
+    public class Tag : Entity
     {
         public string Name { get; set; }
 
@@ -24,11 +24,11 @@ namespace MyCNBlog.Core.Models
         }
     }
 
-    public class PostTag : Model
+    public class PostTag : Entity
     {
-        public int TagId { get; set; }
+        public int? TagId { get; set; }
 
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
 
         public virtual Tag Tag { get; set; }
         

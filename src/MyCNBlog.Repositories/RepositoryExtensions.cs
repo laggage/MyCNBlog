@@ -12,26 +12,19 @@ namespace MyCNBlog.Repositories
         public static void AddRepositories<TDbContext>(this IServiceCollection services) where TDbContext : DbContext
         {
             // 要保证Repository和Unitofwork得到相同scope下的 DbContext
-            //using(IServiceScope scope = services.BuildServiceProvider().CreateScope())
-            //{
-            //    DbContext context = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            //    services.AddScoped<IUnitOfWork>(sp =>
-            //    {
-            //        IServiceScope s = scope;
-            //        context = s.ServiceProvider.GetRequiredService<TDbContext>();
-
-            //        return new UnitOfWork(context);
-            //    });
-            //    AddRepositoriesFromCurAssembly<TDbContext>(services, scope);
-            //}
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             AddRepositoriesFromCurAssembly(services);
         }
 
+        /// <summary>
+        /// 采用反射的方式注册 Reposigory
+        /// </summary>
+        /// <param name="services"></param>
         private static void AddRepositoriesFromCurAssembly(
             IServiceCollection services)
         {
             var assembly = Assembly.GetExecutingAssembly();
+
             Type repoBaseInterface = typeof(IRepository<>);
             var repoImpls = assembly.GetTypes()
                 .Where(x => !x.IsAbstract && !x.IsInterface &&

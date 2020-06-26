@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MyCNBlog.Core.Models
 {
-    public class Blog : Model
+    public class Blog : Entity
     {
         public DateTime OpenDate { get; set; }
 

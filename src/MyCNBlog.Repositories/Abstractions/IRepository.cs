@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MyCNBlog.Core.Abstractions;
 
@@ -12,6 +14,7 @@ namespace MyCNBlog.Repositories.Abstraction
     public interface IRepository<TEntity, TKey>
     {
         PaginationList<TEntity> Query(QueryParameters parameters);
+        Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> predict);
         TEntity QueryById(TKey id, string fields = null);
         Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters);
         Task<TEntity> QueryByIdAsync(TKey id, string fields = null);
@@ -32,6 +35,9 @@ namespace MyCNBlog.Repositories.Abstraction
 
     public interface IRepository<TEntity> : IRepository<TEntity, int>
     {
+        //TEntity QueryNotDeletedAsync(int id);
+        //PaginationList<TEntity> QueryNotDeletedAsync(QueryParameters parameters);
+
         void Delete(TEntity entity, bool softDelete);
         void DeleteById(int id, bool softDelete);
         void Delete(IEnumerable<TEntity> entities, bool softDelete);

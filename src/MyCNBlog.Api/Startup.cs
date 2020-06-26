@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
@@ -8,15 +9,20 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using MyCNBlog.Api.Extensions;
 using MyCNBlog.Core;
 using MyCNBlog.Core.Validators;
 using MyCNBlog.Database;
 using MyCNBlog.Repositories;
 using MyCNBlog.Services.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MyCNBlog.Api
 {
@@ -42,9 +48,18 @@ namespace MyCNBlog.Api
             services.AddTypeSerivce();
             services.AddSwaggerServices();
             services.AddRepositories<MyCNBlogDbContext>();
-            services.AddControllers(o => o.ReturnHttpNotAcceptable = true)
+            services.AddPostFileServices();
+            services.AddControllers(o => {
+                o.ReturnHttpNotAcceptable = true;
+                o.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+            })
                 .AddFluentValidation()
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(c =>
+                {
+                    c.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    c.SerializerSettings.ContractResolver = JsonConvertSettings.CamelCasePropertyName.ContractResolver;
+                });
+            services.AddSortServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -70,6 +85,22 @@ namespace MyCNBlog.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
+        {
+            var builder = new ServiceCollection()
+                .AddLogging()
+                .AddMvc()
+                .AddNewtonsoftJson()
+                .Services.BuildServiceProvider();
+
+            return builder
+                .GetRequiredService<IOptions<MvcOptions>>()
+                .Value
+                .InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>()
+                .First();
         }
     }
 }

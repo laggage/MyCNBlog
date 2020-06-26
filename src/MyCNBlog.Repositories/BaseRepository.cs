@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyCNBlog.Core.Abstractions;
+using MyCNBlog.Core.Interfaces;
 using MyCNBlog.Repositories.Abstraction;
 
 namespace MyCNBlog.Repositories
 {
     public static class QueryExtensions
     {
+        /// <summary>
+        /// 分页操作
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="parameters"></param>
+        /// <returns> <see cref="PaginationList{TEntity}"/> </returns>
         public static PaginationList<TEntity> Paging<TEntity>(
             this IQueryable<TEntity> source, 
             QueryParameters parameters)
@@ -35,7 +44,8 @@ namespace MyCNBlog.Repositories
         }
     }
 
-    public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity> 
+        where TEntity : class
     {
         protected readonly DbContext _context;
 
@@ -49,25 +59,26 @@ namespace MyCNBlog.Repositories
             return _context.Set<TEntity>().AsQueryable().Paging(parameters);
         }
 
-        public TEntity QueryById(int id, string fields = null)
+        public virtual TEntity QueryById(int id, string fields = null)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters)
+        public virtual Task<PaginationList<TEntity>> QueryAsync(QueryParameters parameters)
         {
             return Task.Run(() => Query(parameters));
         }
 
-        public Task<TEntity> QueryByIdAsync(int id, string fields = null)
+        public virtual Task<TEntity> QueryByIdAsync(int id, string fields = null)
         {
             return Task.Run(() => QueryById(id, fields));
         }
 
+
         #region Delete
 
         /// <summary>
-        /// 其他Delete方法, 最终都回调用到这里, 所以让这个方法可以被派生类重写
+        /// 其他Delete方法, 最终都会调用到这里, 所以让这个方法可以被派生类重写
         /// </summary>
         /// <param name="entity"></param>
         public virtual void Delete(TEntity entity)
@@ -100,6 +111,24 @@ namespace MyCNBlog.Repositories
 
 
         #region Soft Delete supported
+
+        protected void HardOrSoftDelete(IEntity<int> entity, bool softDelete)
+        {
+            if(softDelete)
+                SoftDelete(entity);
+            else
+                Delete(entity as TEntity);
+        }
+
+        protected void SoftDelete(IEntity<int> entity)
+        {
+            TEntity entityToDelete = QueryById(entity.Id);
+            if(entityToDelete != null)
+            {
+                (entityToDelete as IEntity<int>).IsDeleted = true;
+                Update(entityToDelete);
+            }
+        }
 
         /// <summary>
         /// 软删除的实现留到派生类
@@ -151,6 +180,14 @@ namespace MyCNBlog.Repositories
                 Update(entity);
         }
 
-        
+        public async Task<IEnumerable<TEntity>> QueryAsync(
+           Expression<Func<TEntity, bool>> predict)
+        {
+            // TODO: 这里必须加await, 涉及到协变和逆变
+            return await _context.Set<TEntity>()
+                .Where(predict)
+                .ToListAsync();
+        }
+
     }
 }

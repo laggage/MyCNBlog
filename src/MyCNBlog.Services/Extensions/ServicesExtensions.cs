@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MyCNBlog.Core.Models;
 using MyCNBlog.Core.Models.Dtos;
 using MyCNBlog.Services.Abstractions;
 using MyCNBlog.Services.ResourceShaping;
+using MyCNBlog.Services.Sort;
 using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -50,6 +53,19 @@ namespace MyCNBlog.Services.Extensions
         public static void AddTypeSerivce(this IServiceCollection services)
         {
             services.AddTransient<ITypeService, TypeService>();
+        }
+
+        public static void AddPostFileServices(this IServiceCollection services)
+        {
+            services.AddScoped<IPostFileService, PostFileService>();
+        }
+
+        public static void AddSortServices(this IServiceCollection services)
+        {
+            var container = new PropertyMappingContainer();
+            container.Register<PostDtoPropetyMapping>();
+            services.AddSingleton<IPropertyMappingContainer>(
+                container);
         }
     }
 }

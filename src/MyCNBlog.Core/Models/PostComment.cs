@@ -5,7 +5,7 @@ namespace MyCNBlog.Core.Models
     /// <summary>
     /// 博文回复
     /// </summary>
-    public class PostComment : Model
+    public class PostComment : Entity
     {
         public int UserId { get; set; }
         

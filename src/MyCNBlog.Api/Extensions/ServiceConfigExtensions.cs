@@ -15,6 +15,7 @@ using MyCNBlog.Core;
 using MyCNBlog.Core.Abstractions;
 using MyCNBlog.Core.Models;
 using MyCNBlog.Database;
+using MyCNBlog.Services.Authorization;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,17 @@ namespace MyCNBlog.Api.Extensions
             {
                 c.AddPolicy(AuthorizationPolicies.AdminOnlyPolicy, b => b.RequireRole(RoleConstants.SuperAdmin));
                 c.AddPolicy(AuthorizationPolicies.BlogerPolicy, b => b.RequireRole(RoleConstants.Bloger, RoleConstants.SuperAdmin));
+                c.AddPolicy(
+                    AuthorizationPolicies.PostAuthorPolicy,
+                    c => {
+                        c.Requirements.Add(new SameAuthorRequirement(RoleConstants.SuperAdmin));
+                    });
+                c.AddPolicy(
+                    AuthorizationPolicies.PostsQueryPolicy,
+                    c => c.Requirements.Add(new PostsQueryAuthorizationRequirment()));
             });
+            services.AddSingleton<IAuthorizationHandler, PostAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostsQueryAuthorizationHandler>();
         }
 
         public static string GetConnectionString(string database, IConfiguration configuration)
@@ -147,7 +158,7 @@ namespace MyCNBlog.Api.Extensions
                 var assemblies = new List<Assembly>
                 {
                     typeof(AuthController).Assembly,
-                    typeof(Model).Assembly
+                    typeof(Entity).Assembly
                 };
                 foreach(Assembly assembly in assemblies)
                 {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyCNBlog.Core.Abstractions;
 using MyCNBlog.Core.Models;
 using MyCNBlog.Database;
@@ -25,6 +26,13 @@ namespace MyCNBlog.Repositories
         public Task<PaginationList<BlogUser>> QueryAsync(BlogUserQueryParameters parameters)
         {
             return Task.Run(() => Query(parameters));
+        }
+
+        public override Task<BlogUser> QueryByIdAsync(int id, string fields = null)
+        {
+            return _context.Set<BlogUser>()
+                .Include(x => x.Blog)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         /// <summary>
