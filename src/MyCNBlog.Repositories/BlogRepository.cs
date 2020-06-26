@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyCNBlog.Core.Models;
+﻿using MyCNBlog.Core.Models;
 using MyCNBlog.Database;
 
 namespace MyCNBlog.Repositories.Abstractions

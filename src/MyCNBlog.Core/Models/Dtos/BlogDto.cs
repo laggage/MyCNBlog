@@ -26,4 +26,19 @@
 
         public int TotalPostCount { get; set; }
     }
+
+    public class BlogAddDto
+    {
+        /// <summary>
+        /// 博客功能是否开通, 这个参数只对管理员生效
+        /// </summary>
+        public bool? IsOpened { get; set; }
+
+        /// <summary>
+        /// 博客签名
+        /// </summary>
+        public string Sign { get; set; }
+
+        public int UserId { get; set; }
+    }
 }

@@ -270,9 +270,7 @@ namespace MyCNBlog.Api.Controllers
 
             _postRepo.Delete(post, softDelete);
 
-            await SaveChangesAndThrowIfFailed();
-
-            return NoContent();
+            return await SaveChangesAndThrowIfFailed();
         }
 
 
@@ -304,9 +302,7 @@ namespace MyCNBlog.Api.Controllers
 
             _postRepo.Update(post);
 
-            await SaveChangesAndThrowIfFailed();
-
-            return NoContent();
+            return await SaveChangesAndThrowIfFailed();
         }
     }
 }

@@ -34,10 +34,12 @@ namespace MyCNBlog.Api.Controllers
         protected ITypeService TypeService { get; }
         protected IdentityOptions IdentityOptions { get; }
 
-        protected async Task SaveChangesAndThrowIfFailed(string failedMessage = null)
+        protected async Task<NoContentResult> SaveChangesAndThrowIfFailed(string failedMessage = null)
         {
             if(!(await UnitOfWork.SaveChangesAsync()))
                 throw new Exception(failedMessage ?? "Operation failed while write database.");
+
+            return NoContent();
         }
 
         protected Task<BadRequestObjectResult> FieldsNotExist()

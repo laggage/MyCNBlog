@@ -23,9 +23,9 @@ namespace MyCNBlog.Services
             return true;
         }
 
-        public static int? GetUserId(this ClaimsPrincipal user, string userNameClaimType)
+        public static int? GetUserId(this ClaimsPrincipal user, string userIdClaimType)
         {
-            string id = user.FindFirst(userNameClaimType)?.Value;
+            string id = user.FindFirst(userIdClaimType)?.Value;
             return id == null ? null : new int?(int.Parse(id));
         }
     }
