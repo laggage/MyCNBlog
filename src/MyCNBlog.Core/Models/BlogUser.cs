@@ -4,10 +4,8 @@ using System;
 
 namespace MyCNBlog.Core.Models
 {
-    public class BlogUser : IdentityUser<int>, IModel<int>
+    public class BlogUser : IdentityUser<int>, IEntity<int>
     {
-        public int BlogId { get; set; }
-
         public bool IsDeleted { get; set; }
 
         public Sex Sex { get; set; }
@@ -20,7 +18,6 @@ namespace MyCNBlog.Core.Models
         /// Physcial path of avatar
         /// </summary>
         public string AvatarPath { get; set; }
-
 
         /// <summary>
         /// One user has one Blog, One Blog belong to one user

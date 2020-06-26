@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCNBlog.Database;
 
 namespace MyCNBlog.Database.Migrations
 {
     [DbContext(typeof(MyCNBlogDbContext))]
-    partial class MyCNBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200626044639_ModifyUserForeignKey")]
+    partial class ModifyUserForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,6 +190,9 @@ namespace MyCNBlog.Database.Migrations
                     b.Property<DateTime>("Birth")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -278,9 +283,6 @@ namespace MyCNBlog.Database.Migrations
                     b.Property<bool>("IsPublic")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsTopMost")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime(6)");
 
@@ -290,9 +292,6 @@ namespace MyCNBlog.Database.Migrations
 
                     b.Property<string>("Title")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<int>("TopMostOrder")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -475,8 +474,7 @@ namespace MyCNBlog.Database.Migrations
                 {
                     b.HasOne("MyCNBlog.Core.Models.Post", "Post")
                         .WithMany("PostTags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PostId");
 
                     b.HasOne("MyCNBlog.Core.Models.Tag", "Tag")
                         .WithMany("PostTags")

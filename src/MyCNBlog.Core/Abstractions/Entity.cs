@@ -2,7 +2,7 @@
 
 namespace MyCNBlog.Core.Abstractions
 {
-    public abstract class Model : IModel<int>
+    public abstract class Entity : IEntity<int>
     {
         public int Id { get; set; }
         /// <summary>

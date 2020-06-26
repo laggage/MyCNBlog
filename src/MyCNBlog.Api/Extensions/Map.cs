@@ -18,7 +18,16 @@ namespace MyCNBlog.Api.Extensions
                 .ForMember(x => x.SecurePassword, x => x.MapFrom(p => p.PasswordHash));
 
             CreateMap<BlogUser, BlogUserDto>().ReverseMap();
-            CreateMap<Blog, BlogDto>();
+            CreateMap<Blog, BlogDto>().
+                ForMember(
+                    m => m.Bloger,
+                    x => x.MapFrom(p => p.User))
+                .ReverseMap();
+
+            CreateMap<Post, PostDto>().ReverseMap();
+            CreateMap<PostAddDto, Post>().ReverseMap();
+
+            CreateMap<Tag, TagDto>().ReverseMap();
         }
     }
 }

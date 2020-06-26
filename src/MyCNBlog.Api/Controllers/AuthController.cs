@@ -168,6 +168,7 @@ namespace MyCNBlog.Api.Controllers
         /// 局部更新用户数据; Permission: <see cref="RoleConstants.SuperAdmin"/>
         /// </summary>
         /// <param name="id">用户id</param>
+        /// <param name="pathDoc"></param>
         /// <returns></returns>
         [HttpPatch("user/{id}")]
         [Authorize(Policy = AuthorizationPolicies.AdminOnlyPolicy)]

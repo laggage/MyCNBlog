@@ -45,7 +45,7 @@ namespace MyCNBlog.Database
                 // BlogUser - Blog
                 b.HasOne(x => x.Blog)
                 .WithOne(x => x.User)
-                .HasForeignKey<BlogUser>(x => x.BlogId);
+                .HasForeignKey<Blog>(x => x.UserId);
             });
 
             builder.Entity<Blog>(b =>
@@ -56,9 +56,6 @@ namespace MyCNBlog.Database
                 b.HasMany(x => x.Posts)
                 .WithOne(x => x.Blog)
                 .HasForeignKey(x => x.BlogId);
-                b.HasOne(x => x.User)
-                .WithOne(x => x.Blog)
-                .HasForeignKey<Blog>(x => x.UserId);
             });
 
             builder.Entity<Post>(b =>
@@ -68,6 +65,7 @@ namespace MyCNBlog.Database
                 b.ToTable(nameof(Post));
                 b.Property(x => x.Path).HasMaxLength(1024);
                 b.Property(x => x.Description).HasMaxLength(512);
+                b.Ignore(x => x.Tags);
                 // Post - Comments
                 b.HasMany(x => x.Comments)
                 .WithOne(x => x.ReplayedPost)
@@ -91,8 +89,13 @@ namespace MyCNBlog.Database
                 b.HasKey(x => x.Id);
                 b.ToTable(nameof(PostTag));
                 // posts - tags
-                b.HasOne(x => x.Post).WithMany(x => x.PostTags).HasForeignKey(x => x.PostId);
-                b.HasOne(x => x.Tag).WithMany(x => x.PostTags).HasForeignKey(x => x.TagId);
+                b.HasOne(x => x.Post)
+                .WithMany(x => x.PostTags)
+                .HasForeignKey(x => x.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+                b.HasOne(x => x.Tag)
+                .WithMany(x => x.PostTags)
+                .HasForeignKey(x => x.TagId);
             });
 
             builder.Entity<Tag>(b =>

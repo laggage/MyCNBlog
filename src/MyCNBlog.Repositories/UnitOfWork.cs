@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using MyCNBlog.Database;
 using MyCNBlog.Repositories.Abstraction;
 
@@ -25,10 +26,13 @@ namespace MyCNBlog.Repositories
         }
 
         private readonly DbContext _context;
+        private readonly ILogger<UnitOfWork> _logger;
 
-        public UnitOfWork(MyCNBlogDbContext context)
+        public UnitOfWork(MyCNBlogDbContext context, 
+            ILogger<UnitOfWork> logger)
         {
             _context = context;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void BeginTransaction()
@@ -76,8 +80,9 @@ namespace MyCNBlog.Repositories
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError(ex, "Savechanges encounter error. ");
                 return false;
             }
         }
