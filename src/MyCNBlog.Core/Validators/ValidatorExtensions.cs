@@ -11,6 +11,7 @@ namespace MyCNBlog.Core.Validators
             services.AddTransient<IValidator<UserLoginDto>, UserLoginValidator>();
             services.AddTransient<IValidator<UserRegisterDto>, UserRegisterValidator>();
             services.AddTransient<IValidator<PostAddDto>, PostValidator>();
+            services.AddTransient<IValidator<BlogAddDto>, BlogValidator>();
         }
     }
 }

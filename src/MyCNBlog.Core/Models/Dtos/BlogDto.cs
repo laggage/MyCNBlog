@@ -39,6 +39,12 @@
         /// </summary>
         public string Sign { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
+
+        public BlogAddDto()
+        {
+            IsOpened = null;
+            UserId = null;
+        }
     }
 }
