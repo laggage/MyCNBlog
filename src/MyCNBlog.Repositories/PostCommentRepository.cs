@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using MyCNBlog.Core.Abstractions;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using MyCNBlog.Core.Models;
 using MyCNBlog.Database;
 using MyCNBlog.Repositories.Abstractions;
@@ -13,12 +12,11 @@ namespace MyCNBlog.Repositories
         {
         }
 
-
-
-        //public override Task<PaginationList<PostComment>> QueryAsync(
-        //    QueryParameters parameters)
-        //{
-        //    return base.Query(parameters).;
-        //}
+        public override IQueryable<PostComment> Query()
+        {
+            return base.Query()
+                .Include(x => x.User)
+                .Include(x => x.RepliedPost);
+        }
     }
 }

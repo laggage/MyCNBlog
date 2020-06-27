@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -34,7 +35,11 @@ namespace MyCNBlog.Api.Controllers
         protected ITypeService TypeService { get; }
         protected IdentityOptions IdentityOptions { get; }
 
-        protected async Task<NoContentResult> SaveChangesAndThrowIfFailed(string failedMessage = null)
+        protected string RoleClaimType => IdentityOptions.ClaimsIdentity.RoleClaimType;
+        protected string UserNameClaimType => IdentityOptions.ClaimsIdentity.UserNameClaimType; 
+        protected string UserIdClaimType => IdentityOptions.ClaimsIdentity.UserIdClaimType;
+
+        protected async Task<NoContentResult> SaveChangesOrThrowIfFailed(string failedMessage = null)
         {
             if(!(await UnitOfWork.SaveChangesAsync()))
                 throw new Exception(failedMessage ?? "Operation failed while write database.");

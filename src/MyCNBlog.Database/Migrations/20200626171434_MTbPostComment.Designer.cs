@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCNBlog.Database;
 
 namespace MyCNBlog.Database.Migrations
 {
     [DbContext(typeof(MyCNBlogDbContext))]
-    partial class MyCNBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200626171434_MTbPostComment")]
+    partial class MTbPostComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,13 +323,10 @@ namespace MyCNBlog.Database.Migrations
                     b.Property<DateTime>("PostedTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("RepliedCommentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RepliedPostId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RepliedUserId")
+                    b.Property<int>("RepliedUserId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -335,13 +334,9 @@ namespace MyCNBlog.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RepliedCommentId");
-
                     b.HasIndex("RepliedPostId");
 
                     b.HasIndex("RepliedUserId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PostComment");
                 });
@@ -468,23 +463,15 @@ namespace MyCNBlog.Database.Migrations
 
             modelBuilder.Entity("MyCNBlog.Core.Models.PostComment", b =>
                 {
-                    b.HasOne("MyCNBlog.Core.Models.PostComment", "RepliedComment")
-                        .WithMany()
-                        .HasForeignKey("RepliedCommentId");
-
                     b.HasOne("MyCNBlog.Core.Models.Post", "RepliedPost")
                         .WithMany("Comments")
                         .HasForeignKey("RepliedPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyCNBlog.Core.Models.BlogUser", "RepliedUser")
-                        .WithMany()
-                        .HasForeignKey("RepliedUserId");
-
                     b.HasOne("MyCNBlog.Core.Models.BlogUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RepliedUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

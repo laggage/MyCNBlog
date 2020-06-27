@@ -72,6 +72,9 @@ namespace MyCNBlog.Database
                 .HasForeignKey(x => x.RepliedPostId);
                 // Post - BlogUser
                 b.HasOne(x => x.Author).WithMany().HasForeignKey(x => x.AuthorId);
+                b.HasMany(x => x.Comments)
+                .WithOne(x => x.RepliedPost)
+                .HasForeignKey(x => x.RepliedPostId);
             });
 
             builder.Entity<PostComment>(b =>
@@ -81,7 +84,20 @@ namespace MyCNBlog.Database
                 // Comment - BlogUser
                 b.HasOne(x => x.User)
                 .WithMany()
-                .HasForeignKey(x => x.RepliedUserId);
+                .HasForeignKey(x => x.UserId)
+                .IsRequired();
+
+                b.HasOne(x => x.RepliedUser)
+                .WithMany()
+                .IsRequired(false)
+                .HasForeignKey(x => x.RepliedUserId)
+                .IsRequired(false);
+
+                b.HasOne(x => x.RepliedComment)
+                .WithMany()
+                .IsRequired(false)
+                .HasForeignKey(x => x.RepliedCommentId)
+                .IsRequired(false);
             });
 
             builder.Entity<PostTag>(b =>
