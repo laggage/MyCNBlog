@@ -2,6 +2,9 @@
 {
     public class UserLoginDto
     {
+        /// <summary>
+        /// 用户名/邮箱
+        /// </summary>
         public string UserName { get; set; }
         
         /// <summary>

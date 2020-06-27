@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MyCNBlog.Api.Extensions;
@@ -71,6 +72,13 @@ namespace MyCNBlog.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{AppConstants.ApiName} {AppConstants.ApiVersion}");
                 c.RoutePrefix = string.Empty;
             });
+
+            app.UseStaticFiles(
+                new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(_configuration.GetStaticFileRootPath()),
+                    RequestPath = _configuration.GetStaticFileRequestPath(),
+                });
 
             app.UseRouting();
 

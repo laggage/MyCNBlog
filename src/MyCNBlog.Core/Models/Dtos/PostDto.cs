@@ -24,6 +24,10 @@ namespace MyCNBlog.Core.Models.Dtos
 
         public bool? IsDeleted { get; set; }
 
+        /// <summary>
+        /// 是否置顶
+        /// Default: False
+        /// </summary>
         public bool IsTopMost { get; set; }
 
         /// <summary>
@@ -40,6 +44,11 @@ namespace MyCNBlog.Core.Models.Dtos
         /// 一篇文章属于一个博客
         /// </summary>
         public BlogDto Blog { get; set; }
+
+        public PostDto()
+        {
+            IsTopMost = false;
+        }
     }
 
     public class PostAddDto

@@ -8,7 +8,7 @@ namespace MyCNBlog.Core.Validators
         public UserRegisterValidator()
         {
             RuleFor(x => x.Avatar)
-                .Must(x => x == null || x.Length < 1024*2);   // 头像最大十兆
+                .Must(x => x == null || x.Length < 1024*1024*2);
             RuleFor(x => x.UserName)
                 .MaximumLength(32)
                 .WithName("用户名")
