@@ -101,7 +101,7 @@ namespace MyCNBlog.Api.Controllers
 
         private string GetUserAvatorUrl(int userId)
         {
-            return Url.Link(nameof(GetUserAvatar), new { userId });
+            return Url.Link(nameof(BlogUserController.GetUserAvatar), new { userId });
         }
 
         /// <summary>

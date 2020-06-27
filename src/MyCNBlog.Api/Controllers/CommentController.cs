@@ -107,7 +107,7 @@ namespace MyCNBlog.Api.Controllers
 
         [HttpPut("{commentId}")]
         [Consumes(ContentTypes.Text)]
-        public async Task<IActionResult> UpdateComment([FromRoute]int commentId, [FromBody] string content)
+        public async Task<IActionResult> UpdateComment([FromRoute] int commentId, [FromBody] string content)
         {
             PostComment comment = await CommentRepo.QueryByIdAsync(commentId);
             if(comment == null)
@@ -134,14 +134,15 @@ namespace MyCNBlog.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
+        [Produces(ContentTypes.JsonContentType)]
         public async Task<IActionResult> GetComments(
             [FromQuery] CommentQueryParameters queryParams)
         {
             bool accessable = true;
             // 匿名普通用户查询, 查询参数需要满足下面的条件
-            if(queryParams.UserId.HasValue || !queryParams.UserId.HasValue ||
-                !queryParams.RepliedPostId.HasValue ||
-                !queryParams.RepliedCommentId.HasValue)
+            if(queryParams.UserId.HasValue || (!queryParams.UserId.HasValue &&
+                !queryParams.RepliedPostId.HasValue &&
+                !queryParams.RepliedCommentId.HasValue))
             {
                 accessable = false;
                 if(queryParams.UserId.HasValue)
@@ -182,12 +183,18 @@ namespace MyCNBlog.Api.Controllers
             {   // 计算回复数量
                 commentsDto.Select(x =>
                 {
+                    if(x.User != null)
+                        x.User.AvatarUrl = GetUserAvatorUrl(x.User.Id);
+                    if(x.RepliedUser != null)
+                        x.RepliedUser.AvatarUrl = GetUserAvatorUrl(x.RepliedUser.Id);
+
                     x.RepliedCount = CommentRepo.Query()
                     .Count(c =>
                     c.RepliedCommentId == x.Id);
                     return x;
                 }).ToList();
             });
+
             IEnumerable<ExpandoObject> shapedComments = commentsDto.ToDynamicObject(queryParams.Fields);
 
             return Ok(shapedComments);

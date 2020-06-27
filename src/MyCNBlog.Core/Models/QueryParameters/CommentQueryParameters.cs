@@ -4,6 +4,10 @@ namespace MyCNBlog.Core.Models
 {
     public class CommentQueryParameters : QueryParameters
     {
+        /// <summary>
+        /// "RepliedCommentId" "RepliedUserId" "RepliedPostId" 这三个参数
+        /// 普通用户至少填写一个, 否则返回403;
+        /// </summary>
         public int? RepliedPostId { get; set; }
 
         /// <summary>
@@ -13,10 +17,16 @@ namespace MyCNBlog.Core.Models
         public int? UserId { get; set; }
 
         /// <summary>
-        /// 回复某个用户的评论
+        /// 回复某个用户的评论;
+        /// "RepliedCommentId" "RepliedUserId" "RepliedPostId" 这三个参数
+        /// 普通用户至少填写一个, 否则返回403;
         /// </summary>
         public int? RepliedUserId { get; set; }
 
+        /// <summary>
+        /// "RepliedCommentId" "RepliedUserId" "RepliedPostId" 这三个参数
+        /// 普通用户至少填写一个, 否则返回403;
+        /// </summary>
         public int? RepliedCommentId { get; set; }
     }
 }

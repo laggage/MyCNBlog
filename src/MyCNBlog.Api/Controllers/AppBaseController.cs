@@ -51,5 +51,15 @@ namespace MyCNBlog.Api.Controllers
         {
             return Task.FromResult(BadRequest("Fields not exist."));
         }
+
+        protected virtual string GetUserAvatorUrl(BlogUser user)
+        {
+            return GetUserAvatorUrl(user.Id);
+        }
+
+        protected virtual string GetUserAvatorUrl(int userId)
+        {
+            return Url.Link(nameof(BlogUserController.GetUserAvatar), new { userId });
+        }
     }
 }
