@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -24,12 +27,14 @@ namespace MyCNBlog.Api
     {
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _enviroment;
+        private const string _corsSectionKey = "AppCors";
+        private const string _policyNameKey = "AppCors:Policy";
 
         public Startup(IConfiguration configuration,
             IWebHostEnvironment enviroment)
         {
-            _configuration=configuration;
-            _enviroment=enviroment;
+            _configuration = configuration;
+            _enviroment = enviroment;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -43,11 +48,11 @@ namespace MyCNBlog.Api
             services.AddSwaggerServices();
             services.AddRepositories<MyCNBlogDbContext>();
             services.AddPostFileServices();
-            services.AddControllers(o => {
+            services.AddControllers(o =>
+            {
                 o.ReturnHttpNotAcceptable = true;
                 o.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
                 o.InputFormatters.Insert(0, new StringInputTextFormatter());
-                //o.InputFormatters.Add(new String())
                 o.RespectBrowserAcceptHeader = true;
             })
                 .AddFluentValidation()
@@ -57,11 +62,22 @@ namespace MyCNBlog.Api
                     c.SerializerSettings.ContractResolver = JsonConvertSettings.CamelCasePropertyName.ContractResolver;
                 });
             services.AddSortServices();
+
+
+            services.AddCors(o =>
+            {
+                IConfigurationSection sec = _configuration.GetSection(_corsSectionKey);
+                var p = new CorsPolicy();
+                sec.Bind(p);
+                o.AddPolicy(_configuration.GetValue<string>(_policyNameKey), p);
+            });
         }
+
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if(env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
             //app.UseExceptionHandler("/api/error");
@@ -81,6 +97,7 @@ namespace MyCNBlog.Api
                 });
 
             app.UseRouting();
+            app.UseCors(_configuration.GetValue<string>(_policyNameKey));
 
             app.UseAuthentication();
             app.UseAuthorization();
