@@ -21,6 +21,11 @@ using MyCNBlog.Core.Abstractions;
 using MyCNBlog.Api.Extensions;
 using System.Collections.Generic;
 using MyCNBlog.Services.Sort;
+using System.Net.Mime;
+using Microsoft.AspNetCore.StaticFiles;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace MyCNBlog.Api.Controllers
 {
@@ -34,6 +39,7 @@ namespace MyCNBlog.Api.Controllers
         private readonly IBlogUserRepository _userRepo;
         private readonly IAuthorizationService _authServ;
         private readonly IPropertyMappingContainer _propMappingContainer;
+        private readonly IConfiguration _configuration;
 
         public PostController(IUnitOfWork unitOfWork,
             IPostRepository postRepo,
@@ -45,7 +51,8 @@ namespace MyCNBlog.Api.Controllers
             IAuthorizationService authServ,
             IOptions<IdentityOptions> identityOptions,
             ITypeService typeService, 
-            IPropertyMappingContainer propMappingContainer)
+            IPropertyMappingContainer propMappingContainer,
+            IConfiguration configuration)
             : base(unitOfWork, mapper, userManager, identityOptions, typeService)
         {
             _postRepo = postRepo ?? throw new ArgumentNullException(nameof(postRepo));
@@ -54,6 +61,7 @@ namespace MyCNBlog.Api.Controllers
             _userRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
             _authServ = authServ ?? throw new ArgumentNullException(nameof(authServ));
             _propMappingContainer = propMappingContainer;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -303,6 +311,55 @@ namespace MyCNBlog.Api.Controllers
             _postRepo.Update(post);
 
             return await SaveChangesOrThrowIfFailed();
+        }
+
+        /// <summary>
+        /// 上传图片接口
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost("images")]
+        [Authorize(Policy = AuthorizationPolicies.BlogerPolicy)]
+        public async Task<IActionResult> UploadImage()
+        {
+            IFormFile file = HttpContext.Request.Form.Files.FirstOrDefault();
+            if(file == null)
+                return BadRequest();
+            string[] mimeTypes = new string[]
+            {
+                "image/jpeg",
+                "image/gif",
+                "image/bmp",
+                "image/vnd.microsoft.icon",
+                "image/png"
+            };
+            var provider = new FileExtensionContentTypeProvider();
+
+            if(!provider.TryGetContentType(file.FileName, out string contentType))
+                return await Task.FromResult(BadRequest());
+
+            int maxSize = _configuration.GetUploadImageFileMaxSize();
+            string saveFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            string subDir = "images";
+            string savePath = Path.Combine(_configuration.GetStaticFileRootPath(), subDir, saveFileName); 
+
+            if(mimeTypes.Contains(contentType) && file.Length < maxSize)
+            {
+                using(var fs = new FileStream(savePath, FileMode.CreateNew, FileAccess.Write))
+                {
+                    await file.CopyToAsync(fs);
+                    await fs.FlushAsync();
+                    fs.Close();
+                }
+            }
+
+            var result = new
+            {
+                requestUrl = 
+                    $"{HttpContext.Request.Host}{_configuration.GetStaticFileRequestPath()}/{subDir}/{saveFileName}"
+            };
+
+            return Ok(result);
         }
     }
 }

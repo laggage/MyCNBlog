@@ -5,6 +5,8 @@ using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -136,19 +138,19 @@ namespace MyCNBlog.Api.Controllers
             [FromQuery] CommentQueryParameters queryParams)
         {
             bool accessable = true;
-            // 普通用户查询, 至少指定除UserId一个参数
+            // 匿名普通用户查询, 查询参数需要满足下面的条件
             if(queryParams.UserId.HasValue || !queryParams.UserId.HasValue ||
                 !queryParams.RepliedPostId.HasValue ||
                 !queryParams.RepliedCommentId.HasValue)
             {
                 accessable = false;
                 if(queryParams.UserId.HasValue)
-                    // 普通用户可以查询自己的所有评论
+                    // 如果是以登录用户, 且设置了CommentQueryParameters.UserId为自己, 则可以进行查询
                     accessable = (await AuthServ.AuthorizeAsync(
                         User, null,
                         new ResourceOwnerAuthorizationRequirement<int>(
                             queryParams.UserId.Value))).Succeeded;
-                if(!accessable)
+                if(!accessable) // 超级管理员直接放行
                     accessable = (await AuthServ.AuthorizeAsync(
                         User, null,
                         new RolesAuthorizationRequirement(new string[] { RoleConstants.SuperAdmin })))
