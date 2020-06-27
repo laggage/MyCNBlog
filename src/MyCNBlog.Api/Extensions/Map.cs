@@ -32,8 +32,11 @@ namespace MyCNBlog.Api.Extensions
 
             CreateMap<Tag, TagDto>().ReverseMap();
 
-            CreateMap<CommentAddDto, PostComment>();
-            CreateMap<PostComment, PostComment>();
+            CreateMap<CommentAddDto, PostComment>()
+                .ReverseMap();
+            CreateMap<PostComment, CommentDto>()
+                .ReverseMap();
+            CreateMap<BlogUser, CommentUserDto>();
         }
     }
 }

@@ -25,17 +25,19 @@ namespace MyCNBlog.Repositories
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            Type repoBaseInterface = typeof(IRepository<>);
+            Type baseInterface = typeof(IRepository<>);
+            Type baseType = typeof(AppRepository<>);
             var repoImpls = assembly.GetTypes()
                 .Where(x => !x.IsAbstract && !x.IsInterface &&
-                x.GetInterfaces().Any(i => i.Name == repoBaseInterface.Name)).ToList();
+                x.BaseType.Name == baseType.Name).ToList();
 
             foreach(Type type in repoImpls)
             {
                 Type @interface = type.GetInterfaces()
                     .FirstOrDefault(
                     x => x.Name.Substring(0, x.Name.Length - 1) !=
-                    repoBaseInterface.Name.Substring(0, repoBaseInterface.Name.Length - 1));
+                    baseInterface.Name.Substring(
+                        0, baseInterface.Name.Length - 1));
                 services.Add(
                     ServiceDescriptor.Scoped(@interface, type));
             }

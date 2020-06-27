@@ -45,6 +45,9 @@ namespace MyCNBlog.Api
             services.AddControllers(o => {
                 o.ReturnHttpNotAcceptable = true;
                 o.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+                o.InputFormatters.Insert(0, new StringInputTextFormatter());
+                //o.InputFormatters.Add(new String())
+                o.RespectBrowserAcceptHeader = true;
             })
                 .AddFluentValidation()
                 .AddNewtonsoftJson(c =>

@@ -77,7 +77,7 @@ namespace MyCNBlog.Api.Controllers
 
             BlogRepo.Update(blog);
 
-            return await SaveChangesAndThrowIfFailed();
+            return await SaveChangesOrThrowIfFailed();
         }
     }
 }

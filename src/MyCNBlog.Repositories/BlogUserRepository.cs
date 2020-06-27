@@ -8,7 +8,7 @@ using MyCNBlog.Repositories.Abstraction;
 
 namespace MyCNBlog.Repositories
 {
-    public class BlogUserRepository : BaseRepository<BlogUser>, IBlogUserRepository
+    public class BlogUserRepository : AppRepository<BlogUser>, IBlogUserRepository
     {
         public BlogUserRepository(MyCNBlogDbContext context):base(context)
         {

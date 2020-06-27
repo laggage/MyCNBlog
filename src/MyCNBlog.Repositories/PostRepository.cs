@@ -8,7 +8,7 @@ using MyCNBlog.Repositories.Abstractions;
 
 namespace MyCNBlog.Repositories
 {
-    public class PostRepository : BaseRepository<Post>, IPostRepository
+    public class PostRepository : AppRepository<Post>, IPostRepository
     {
         public PostRepository(MyCNBlogDbContext context) : base(context)
         {

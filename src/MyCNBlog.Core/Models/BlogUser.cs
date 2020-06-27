@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyCNBlog.Core.Interfaces;
 using System;
+using System.Collections;
 
 namespace MyCNBlog.Core.Models
 {
