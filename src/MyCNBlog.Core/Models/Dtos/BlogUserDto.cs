@@ -23,7 +23,7 @@ namespace MyCNBlog.Core.Models.Dtos
 
         public DateTime? Birth { get; set; }
 
-        public DateTime? RegiserDate { get; set; }
+        public DateTime? RegisterDate { get; set; }
 
         /// <summary>
         /// Physcial path of avatar
