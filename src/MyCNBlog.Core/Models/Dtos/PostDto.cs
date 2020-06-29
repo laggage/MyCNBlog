@@ -24,6 +24,10 @@ namespace MyCNBlog.Core.Models.Dtos
 
         public bool? IsDeleted { get; set; }
 
+        public int ViewCount { get; set; }
+
+        public int CommentsCount { get; set; }
+
         /// <summary>
         /// 是否置顶
         /// Default: False

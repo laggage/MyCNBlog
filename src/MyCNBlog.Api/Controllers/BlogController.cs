@@ -31,6 +31,8 @@ namespace MyCNBlog.Api.Controllers
         protected IAuthorizationService AuthServ { get; }
         protected IBlogUserRepository UserRepo { get; }
         protected IValidator<BlogAddDto> Validator { get; }
+        protected IPostRepository PostRepo { get; }
+        protected ICommentRepository CommentRepo { get; }
 
         public BlogController(IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -40,13 +42,17 @@ namespace MyCNBlog.Api.Controllers
             IBlogRepository blogRepo,
             IAuthorizationService authServ,
             IBlogUserRepository userRepo,
-            IValidator<BlogAddDto> validator)
+            IValidator<BlogAddDto> validator,
+            IPostRepository postRepo,
+            ICommentRepository commentRepo)
             : base(unitOfWork, mapper, userManager, identityOptions, typeService)
         {
             BlogRepo = blogRepo;
             AuthServ = authServ;
             UserRepo = userRepo;
             Validator = validator;
+            PostRepo = postRepo;
+            CommentRepo = commentRepo;
         }
 
         /// <summary>
@@ -100,14 +106,13 @@ namespace MyCNBlog.Api.Controllers
             blog.User = await UserManager.FindByIdAsync(blog.UserId.ToString());
             if(blog == null)
                 return BadRequest();
-
+            
             BlogDto dto = Mapper.Map<BlogDto>(blog);
-            dto.Blogger.Blog = null;
-            dto.Blogger.Birth = null;
-            dto.Blogger.Email = null;
             dto.Blogger.AvatarUrl = GetUserAvatorUrl(blog.User);
             ExpandoObject blogger = dto.Blogger.ToDynamicObject("id, username, avatarUrl, sex");
-            
+            dto.TotalPostsCount = await PostRepo.Query().CountAsync(x => x.BlogId == id);
+            dto.TotalCommentsCount = await CommentRepo.Query().CountAsync(x => x.RepliedUserId == blog.User.Id);
+
             ExpandoObject shapedUser = dto.ToDynamicObject(fields);
             shapedUser.Remove(nameof(dto.Blogger), out _);
             shapedUser.TryAdd(nameof(dto.Blogger), blogger);

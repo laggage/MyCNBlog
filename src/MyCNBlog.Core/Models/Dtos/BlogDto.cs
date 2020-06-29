@@ -31,7 +31,9 @@ namespace MyCNBlog.Core.Models.Dtos
         /// </summary>
         public BlogUserDto Blogger { get; set; }
 
-        public int TotalPostCount { get; set; }
+        public int TotalPostsCount { get; set; }
+
+        public int TotalCommentsCount { get; set; }
     }
 
     public class BlogAddDto

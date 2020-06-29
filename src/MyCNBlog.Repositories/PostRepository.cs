@@ -23,7 +23,9 @@ namespace MyCNBlog.Repositories
         {
             return base.Query().AsQueryable()
                 .Include(x => x.PostTags)
-                .ThenInclude(x => x.Tag);
+                .ThenInclude(x => x.Tag)
+                .Include(x => x.Author)
+                .ThenInclude(x => x.Blog);
         }
 
         public override Post QueryById(int id)
@@ -68,6 +70,11 @@ namespace MyCNBlog.Repositories
             //if(topMost.Any())
             //    result.InsertRange(0, topMost);
             return result;
+        }
+
+        public Task<int> QueryCommentsCountAsync(int postId)
+        {
+            return _context.Set<PostComment>().CountAsync(x => x.RepliedPostId == postId);
         }
     }
 }

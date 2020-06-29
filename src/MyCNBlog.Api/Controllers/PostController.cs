@@ -21,11 +21,10 @@ using MyCNBlog.Core.Abstractions;
 using MyCNBlog.Api.Extensions;
 using System.Collections.Generic;
 using MyCNBlog.Services.Sort;
-using System.Net.Mime;
 using Microsoft.AspNetCore.StaticFiles;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyCNBlog.Api.Controllers
 {
@@ -96,10 +95,12 @@ namespace MyCNBlog.Api.Controllers
             IEnumerable<PostDto> postsDto = Mapper.Map<IEnumerable<PostDto>>(sortedPosts);
 
             SetPostDtoContentUrl(postsDto);
+            Task calTask = CalPostsCommentsCount(postsDto);
             await Task.Run(() =>
             {
                 postsDto.Select(x => x.Blog.Blogger.AvatarUrl = GetUserAvatorUrl(x.Blog.Blogger.Id)).ToList();
             });
+            await calTask;
 
             IEnumerable<ExpandoObject> shapedPosts = postsDto.ToDynamicObject(queryParams.Fields);
 
@@ -136,18 +137,31 @@ namespace MyCNBlog.Api.Controllers
             if(!TypeService.HasProperties<PostDto>(fields))
                 return await FieldsNotExist();
 
-            Post post = await _postRepo.QueryByIdAsync(id);
+            Post post = await _postRepo.Query(x => x.Id == id).FirstOrDefaultAsync();
 
             if(post is null)
                 return NotFound();
 
             PostDto postDto = Mapper.Map<PostDto>(post);
+            postDto.Blog.Blogger.AvatarUrl = GetUserAvatorUrl(post.Blog.UserId);
+            await CalPostCommentsCount(postDto);
 
             SetPostDtoContentUrl(postDto);
 
             ExpandoObject shapedPost = postDto.ToDynamicObject(fields);
 
             return Ok(shapedPost);
+        }
+
+        private async Task CalPostCommentsCount(PostDto postDto)
+        {
+            postDto.CommentsCount = await _postRepo.QueryCommentsCountAsync(postDto.Id);
+        }
+
+        private async Task CalPostsCommentsCount(IEnumerable<PostDto> postsDto)
+        {
+            foreach(PostDto dto in postsDto)
+                await CalPostCommentsCount(dto);
         }
 
         /// <summary>
@@ -175,6 +189,10 @@ namespace MyCNBlog.Api.Controllers
                 if(!isAuthorOrAdmin)
                     return Forbid();
             }
+
+            post.ViewCount++;   // 阅读量+1
+            _postRepo.Update(post);
+            await SaveChangesOrThrowIfFailed();
 
             return File(
                 _postFileServ.GetPostContentStream(post.Path),
