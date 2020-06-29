@@ -98,7 +98,7 @@ namespace MyCNBlog.Api.Controllers
             SetPostDtoContentUrl(postsDto);
             await Task.Run(() =>
             {
-                postsDto.Select(x => x.Blog.Bloger.AvatarUrl = GetUserAvatorUrl(x.Blog.Bloger.Id)).ToList();
+                postsDto.Select(x => x.Blog.Blogger.AvatarUrl = GetUserAvatorUrl(x.Blog.Blogger.Id)).ToList();
             });
 
             IEnumerable<ExpandoObject> shapedPosts = postsDto.ToDynamicObject(queryParams.Fields);

@@ -1,4 +1,6 @@
-﻿namespace MyCNBlog.Core.Models.Dtos
+﻿using System;
+
+namespace MyCNBlog.Core.Models.Dtos
 {
     /// <summary>
     /// 代表一个博客对象, 每个用户都可以有且之多有一个博客
@@ -20,9 +22,14 @@
         public int UserId { get; set; }
 
         /// <summary>
+        /// 开通博客时间
+        /// </summary>
+        public DateTime OpenDate { get; set; }
+
+        /// <summary>
         /// 博主
         /// </summary>
-        public BlogUserDto Bloger { get; set; }
+        public BlogUserDto Blogger { get; set; }
 
         public int TotalPostCount { get; set; }
     }
