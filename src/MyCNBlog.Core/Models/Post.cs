@@ -40,6 +40,11 @@ namespace MyCNBlog.Core.Models
         public int TopMostOrder { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public int ViewCount { get; set; }
+
+        /// <summary>
         /// Navigation property to comments
         /// A post has many comments
         /// </summary>

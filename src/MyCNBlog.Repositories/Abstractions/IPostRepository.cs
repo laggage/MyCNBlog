@@ -9,5 +9,7 @@ namespace MyCNBlog.Repositories.Abstractions
     {
         Task<PaginationList<Post>> QueryAsync(
             PostQueryParameters parameters);
+
+        Task<int> QueryCommentsCountAsync(int postId);
     }
 }
