@@ -94,16 +94,6 @@ namespace MyCNBlog.Api.Controllers
             return savePath;
         }
 
-        private string GetUserAvatorUrl(BlogUser user)
-        {
-            return GetUserAvatorUrl(user.Id);
-        }
-
-        private string GetUserAvatorUrl(int userId)
-        {
-            return Url.Link(nameof(BlogUserController.GetUserAvatar), new { userId });
-        }
-
         /// <summary>
         /// 用户头像获取
         /// </summary>
@@ -198,8 +188,9 @@ namespace MyCNBlog.Api.Controllers
         {
             if(!TypeService.HasProperties<BlogUserDto>(fields))
                 this.FieldsNotExist(fields);
-
-            BlogUser user = await UserManager.FindByIdAsync(id.ToString());
+            
+            BlogUser user = await _userRepo.QueryByIdAsync(id);
+            user.Blog.User = null;
 
             if(user == null)
                 return BadRequest($"Failed to find user with id: ${id}");
