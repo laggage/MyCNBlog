@@ -13,7 +13,7 @@ namespace MyCNBlog.Core.Models
 
         public DateTime Birth { get; set; }
 
-        public DateTime RegiserDate { get; set; }
+        public DateTime RegisterDate { get; set; }
 
         /// <summary>
         /// Physcial path of avatar
@@ -31,7 +31,7 @@ namespace MyCNBlog.Core.Models
             Birth = birth;
             UserName = name;
             Sex = sex;
-            RegiserDate = DateTime.Now;
+            RegisterDate = DateTime.Now;
             NormalizedUserName = UserName?.ToUpper();
             Blog = new Blog();
         }

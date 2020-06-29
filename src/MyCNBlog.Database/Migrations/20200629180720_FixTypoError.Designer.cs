@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCNBlog.Database;
 
 namespace MyCNBlog.Database.Migrations
 {
     [DbContext(typeof(MyCNBlogDbContext))]
-    partial class MyCNBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200629180720_FixTypoError")]
+    partial class FixTypoError
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
