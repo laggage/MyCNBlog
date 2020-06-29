@@ -20,7 +20,7 @@ namespace MyCNBlog.Api.Extensions
             CreateMap<BlogUser, BlogUserDto>().ReverseMap();
             CreateMap<Blog, BlogDto>().
                 ForMember(
-                    m => m.Bloger,
+                    m => m.Blogger,
                     x => x.MapFrom(p => p.User))
                 .ReverseMap();
             CreateMap<Blog, BlogAddDto>()

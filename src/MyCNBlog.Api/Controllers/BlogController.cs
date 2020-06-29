@@ -1,10 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MyCNBlog.Api.Extensions;
 using MyCNBlog.Core;
@@ -58,9 +65,10 @@ namespace MyCNBlog.Api.Controllers
              [FromBody] JsonPatchDocument<BlogAddDto> patchDoc)
         {
             Blog blog = await BlogRepo.QueryByIdAsync(blogId);
+            bool isOpen = blog.IsOpened;
             if(blog == null)
                 return NotFound();
-
+            
             BlogAddDto blogDto = Mapper.Map<BlogAddDto>(blog);
             patchDoc.ApplyTo(blogDto);
 
@@ -72,12 +80,39 @@ namespace MyCNBlog.Api.Controllers
                     User, blogDto, AuthorizationPolicies.OpenBlogPolicy))
                     .Succeeded)
                 return Forbid();
+            
+            if(!isOpen && blogDto.IsOpened == true)
+                blog.OpenDate = DateTime.Now;
 
             Mapper.Map(blogDto, blog);
 
             BlogRepo.Update(blog);
 
             return await SaveChangesOrThrowIfFailed();
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(BlogDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBlog([FromRoute]int id, [FromQuery]string fields)
+        {
+            //UserManager.FindByIdAsync()
+            Blog blog = await BlogRepo.Query().FirstOrDefaultAsync(x => x.Id == id);
+            blog.User = await UserManager.FindByIdAsync(blog.UserId.ToString());
+            if(blog == null)
+                return BadRequest();
+
+            BlogDto dto = Mapper.Map<BlogDto>(blog);
+            dto.Blogger.Blog = null;
+            dto.Blogger.Birth = null;
+            dto.Blogger.Email = null;
+            dto.Blogger.AvatarUrl = GetUserAvatorUrl(blog.User);
+            ExpandoObject blogger = dto.Blogger.ToDynamicObject("id, username, avatarUrl, sex");
+            
+            ExpandoObject shapedUser = dto.ToDynamicObject(fields);
+            shapedUser.Remove(nameof(dto.Blogger), out _);
+            shapedUser.TryAdd(nameof(dto.Blogger), blogger);
+
+            return Ok(shapedUser);
         }
     }
 }

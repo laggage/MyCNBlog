@@ -65,8 +65,8 @@ namespace MyCNBlog.Repositories
                 query = query.Where(p => p.Title.Contains(parameters.Title));
             }
             PaginationList<Post> result = await query.PagingAsync(parameters);
-            if(topMost.Any())
-                result.InsertRange(0, topMost);
+            //if(topMost.Any())
+            //    result.InsertRange(0, topMost);
             return result;
         }
     }
