@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using MyCNBlog.Services;
 
 namespace MyCNBlog.Api.Controllers
 {
@@ -189,8 +190,8 @@ namespace MyCNBlog.Api.Controllers
                 if(!isAuthorOrAdmin)
                     return Forbid();
             }
-
-            post.ViewCount++;   // 阅读量+1
+            if (User.GetUserId(UserIdClaimType) != post.AuthorId)
+                post.ViewCount++;   // 阅读量+1
             _postRepo.Update(post);
             await SaveChangesOrThrowIfFailed();
 
