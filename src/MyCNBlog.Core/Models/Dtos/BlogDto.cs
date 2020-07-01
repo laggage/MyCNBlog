@@ -33,7 +33,15 @@ namespace MyCNBlog.Core.Models.Dtos
 
         public int TotalPostsCount { get; set; }
 
+        /// <summary>
+        /// 收到的评论总数
+        /// </summary>
         public int TotalCommentsCount { get; set; }
+
+        /// <summary>
+        /// 发表的评论总数
+        /// </summary>
+        public int TotalPostedCommentsCount { get; set; }
     }
 
     public class BlogAddDto

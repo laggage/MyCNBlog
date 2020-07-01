@@ -111,7 +111,8 @@ namespace MyCNBlog.Api.Controllers
             dto.Blogger.AvatarUrl = GetUserAvatorUrl(blog.User);
             ExpandoObject blogger = dto.Blogger.ToDynamicObject("id, username, avatarUrl, sex");
             dto.TotalPostsCount = await PostRepo.Query().CountAsync(x => x.BlogId == id);
-            dto.TotalCommentsCount = await CommentRepo.Query().CountAsync(x => x.RepliedUserId == blog.User.Id);
+            dto.TotalCommentsCount = await CommentRepo.Query().CountAsync(x => x.RepliedUserId == blog.UserId);
+            dto.TotalPostedCommentsCount = await BlogRepo.QueryTotalPostedCommentCountAsync(blog.UserId);
 
             ExpandoObject shapedUser = dto.ToDynamicObject(fields);
             shapedUser.Remove(nameof(dto.Blogger), out _);
