@@ -29,5 +29,7 @@ namespace MyCNBlog.Core.Models.Dtos
         /// 用户头像; MaxSize: 2M
         /// </summary>
         public IFormFile Avatar { get; set; }
+
+        public Sex Sex { get; set; }
     }
 }

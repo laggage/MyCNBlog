@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using MyCNBlog.Core.Models;
 using MyCNBlog.Core.Models.Dtos;
 
@@ -13,6 +14,7 @@ namespace MyCNBlog.Api.Extensions
 
             CreateMap<UserRegisterDto, BlogUser>()
                 .ForMember(x => x.NormalizedUserName, x => x.MapFrom(p => p.UserName.ToUpper()))
+                .ForMember(x => x.RegisterDate, m => m.MapFrom(s => DateTime.Now))
                 .AfterMap((dto, user) => user.NormalizedEmail = dto.Email?.ToUpper())
                 .ReverseMap()
                 .ForMember(x => x.SecurePassword, x => x.MapFrom(p => p.PasswordHash));
