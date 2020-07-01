@@ -92,7 +92,7 @@ namespace MyCNBlog.Api.Controllers
             if(user.IsDeleted)
                 return BadRequest("用户已注销");
 
-            if(!_env.IsDevelopment())
+            if(_env.IsProduction())
             {   // 非生产环境, 前端将密码通过公钥加密发送过来, 这里使用私钥解密
                 // TODO: 每次登录使用不同的RSA密钥
                 dto.SecurePassword = _cryptoService.Decrypt(dto.SecurePassword);
