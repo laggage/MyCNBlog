@@ -339,7 +339,6 @@ namespace MyCNBlog.Api.Controllers
         /// <summary>
         /// 上传图片接口
         /// </summary>
-        /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("images")]
         [Authorize(Policy = AuthorizationPolicies.BlogerPolicy)]

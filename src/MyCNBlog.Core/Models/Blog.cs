@@ -8,16 +8,25 @@ namespace MyCNBlog.Core.Models
     {
         public DateTime OpenDate { get; set; }
 
+        private bool _isOpen;
         /// <summary>
         /// 博客功能是否开通, default: false
         /// </summary>
-        public bool IsOpened { get; set; }
+        public bool IsOpened
+        {
+            get => _isOpen; set
+            {
+                if(value)
+                    OpenDate = DateTime.Now;
+                _isOpen = value;
+            }
+        }
 
         /// <summary>
         /// 博客签名
         /// </summary>
         public string Sign { get; set; }
-        
+
         public int UserId { get; set; }
 
 

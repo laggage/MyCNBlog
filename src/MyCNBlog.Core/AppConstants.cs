@@ -8,7 +8,7 @@ namespace MyCNBlog.Core
     /// </summary>
     public class AppConstants
     {
-        public static string AppName = "MyCNBlogs";
+        public static string AppName = "MyCNBlog";
         public static string ApiName = "MyCNBlogs Api";
         public static string ApiVersion = "V1";
         public static string Author = "laggage";

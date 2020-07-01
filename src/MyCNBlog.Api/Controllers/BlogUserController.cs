@@ -150,7 +150,7 @@ namespace MyCNBlog.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromForm] UserRegisterDto dto)
         {
-            if(!_env.IsDevelopment())
+            if(_env.IsProduction())
                 dto.SecurePassword = _cryptoService.Decrypt(dto.SecurePassword);
 
             if(!ModelState.IsValid)
@@ -163,6 +163,15 @@ namespace MyCNBlog.Api.Controllers
                 await SaveUserAvatorAsync(dto.Avatar);
 
             IdentityResult result = await UserManager.CreateAsync(user, dto.SecurePassword);
+            if(!_env.IsProduction())
+            {   // 非生产环境, 直接开同博客
+                user.Blog.IsOpened = true;
+                await UserManager.AddToRoleAsync(user, RoleConstants.Bloger);
+            }
+            else
+            {
+                await UserManager.AddToRoleAsync(user, RoleConstants.Visitor);
+            }
 
             if(!result.Succeeded)
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, $"Failed to create user, errors: {result.Errors?.Select(x => x.Description + ";")}");
