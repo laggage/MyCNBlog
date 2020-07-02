@@ -191,7 +191,7 @@ namespace MyCNBlog.Api.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [Authorize(Policy = AuthorizationPolicies.AdminOnlyPolicy)]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         [ProducesResponseType(typeof(BlogUserDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUser([FromRoute] int id, [FromQuery] string fields)
         {
@@ -229,7 +229,7 @@ namespace MyCNBlog.Api.Controllers
         /// <returns></returns>
         [HttpGet("active")]
         [Authorize]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         [ProducesResponseType(typeof(BlogUserDto), StatusCodes.Status200OK)]
         public Task<IActionResult> GetUser([FromQuery] string fields)
         {
@@ -274,7 +274,7 @@ namespace MyCNBlog.Api.Controllers
         /// <returns></returns>
         [HttpPatch("{id}")]
         [Authorize(Policy = AuthorizationPolicies.BlogerPolicy)]
-        [Consumes(ContentTypes.JsonContentType)]
+        [Consumes(ContentTypes.JSON)]
         public async Task<IActionResult> PatchUpdateUser([FromRoute] int id, [FromBody] JsonPatchDocument<UserRegisterDto> pathDoc)
         {
             if(!ModelState.IsValid)

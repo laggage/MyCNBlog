@@ -80,7 +80,7 @@ namespace MyCNBlog.Api.Controllers
         [HttpPost("login/token")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Consumes(ContentTypes.JsonContentType)]
+        [Consumes(ContentTypes.JSON)]
         public async Task<IActionResult> GetJwtToken([FromBody] UserLoginDto dto)
         {
             if(!ModelState.IsValid)

@@ -54,10 +54,10 @@ namespace MyCNBlog.Api.Controllers
         }
 
         [HttpPost]
-        [Consumes(ContentTypes.JsonContentType)]
+        [Consumes(ContentTypes.JSON)]
         [Authorize(Policy = AuthorizationPolicies.BlogerPolicy)]
         [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         public async Task<IActionResult> AddComment([FromBody] CommentAddDto addDto)
         {
             if(!ModelState.IsValid)
@@ -134,7 +134,7 @@ namespace MyCNBlog.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         public async Task<IActionResult> GetComments(
             [FromQuery] CommentQueryParameters queryParams)
         {

@@ -3,7 +3,7 @@
     "MyCNBlog.Api": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "PreProduction"
       },
       "applicationUrl": "http://localhost:5000"
     }

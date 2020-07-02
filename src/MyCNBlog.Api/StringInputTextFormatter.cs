@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -9,7 +8,7 @@ using MyCNBlog.Core;
 namespace MyCNBlog.Api
 {
     /// <summary>
-    /// 支持客户端传 纯文本
+    /// 支持客户端传纯文本 text/plain
     /// 居然没有内置的支持...
     /// </summary>
     public class StringInputTextFormatter : TextInputFormatter

@@ -64,7 +64,7 @@ namespace MyCNBlog.Api.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPatch("{blogId}")]
-        [Consumes(ContentTypes.JsonContentType)]
+        [Consumes(ContentTypes.JSON)]
         [Authorize]
         public async Task<IActionResult> PartiallyUpdate(
              [FromRoute] int blogId,

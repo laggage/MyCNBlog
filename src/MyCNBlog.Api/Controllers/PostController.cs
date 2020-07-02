@@ -72,7 +72,7 @@ namespace MyCNBlog.Api.Controllers
         [HttpGet]
         [AllowAnonymous()]
         [ProducesResponseType(typeof(IEnumerable<PostDto>), StatusCodes.Status200OK)]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         public async Task<IActionResult> GetPosts(
             [FromQuery] PostQueryParameters queryParams)
         {
@@ -208,9 +208,9 @@ namespace MyCNBlog.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = AuthorizationPolicies.BlogerPolicy)]
-        [Consumes(ContentTypes.JsonContentType)]
+        [Consumes(ContentTypes.JSON)]
         [ProducesResponseType(typeof(PostDto), StatusCodes.Status201Created)]
-        [Produces(ContentTypes.JsonContentType)]
+        [Produces(ContentTypes.JSON)]
         public async Task<IActionResult> AddPost([FromBody] PostAddDto dto)
         {
             if(!ModelState.IsValid)

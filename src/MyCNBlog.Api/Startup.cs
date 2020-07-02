@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using FluentValidation.AspNetCore;
@@ -12,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyCNBlog.Api.Extensions;
 using MyCNBlog.Core;
@@ -73,15 +72,15 @@ namespace MyCNBlog.Api
             });
         }
 
-
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if(env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-
-            //app.UseExceptionHandler("/api/error");
-
+            else
+            {
+                app.UseAppExceptionHandler(loggerFactory);
+            }
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

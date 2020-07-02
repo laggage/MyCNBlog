@@ -1,7 +1,6 @@
 ﻿using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +31,6 @@ namespace MyCNBlog.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration, IWebHostEnvironment env)
         {
-            ;
             services.AddDbContext<MyCNBlogDbContext>(options =>
             {
                 options.UseMySql(GetConnectionString("mysql", configuration));
