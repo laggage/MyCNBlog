@@ -6,6 +6,14 @@ asp.net core3.1博客应用 - 后端api;
 
 ef core + 仓储做数据持久化; 直接使用jwt做身份验证和授权, `AuthController` 官方JWT帮助类签发JWT TOKEN;
 
+## Refactor roadmap
+
+ - [ ] Impl **DDD** architecture
+ - [ ] Add integration test
+ - [ ] Change to DBFirst
+ - [ ] Proxy font end client with asp.net core
+ - [ ] Add cache
+
 ## Config
 
 部署前需要根据服务器配置设置一下appsettings.json文件,
